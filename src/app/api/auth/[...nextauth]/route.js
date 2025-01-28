@@ -23,7 +23,7 @@ const authOptions = {
         });
 
         // Verificar si el usuario no existe
-        if(!userFound) return null;
+        if(!userFound) throw new Error("Usuario no encontrado");
 
         // Verificar si la contraseña es correcta
         const isValidPassword = await bcrypt.compare(
@@ -32,7 +32,7 @@ const authOptions = {
         );
 
         // Si la contraseña no es correcta, retornar null
-        if (!isValidPassword) return null;
+        if (!isValidPassword) throw new Error("Contraseña incorrecta");
 
         // Retornar la sesión del usuario
         return {
