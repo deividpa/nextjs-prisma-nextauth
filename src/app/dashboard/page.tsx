@@ -2,23 +2,11 @@
 
 import React from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import Link from "next/link"
 
 const Dashboard = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
-      {/* Header */}
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-gray-900">Bienvenido, David</h1>
-          <Avatar>
-            <AvatarImage src="https://github.com/deividpa.png" alt="@deividpa" />
-            <AvatarFallback>DP</AvatarFallback>
-          </Avatar>
-        </div>
-      </header>
-
       {/* Main Content */}
       <main className="flex-grow">
         <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
