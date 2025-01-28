@@ -67,6 +67,7 @@ const LoginPage = () => {
     toast({
       title: "Inicio de sesión exitoso",
       description: "Has iniciado sesión correctamente.",
+      variant: "success",
     });
 
     // Redirigir al usuario a la página de inicio
