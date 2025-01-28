@@ -1,12 +1,14 @@
 'use client'
 
 import React from 'react'
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation"
+import { signIn } from "next-auth/react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 import Link from 'next/link'
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useToast } from "@/hooks/use-toast";
@@ -27,15 +29,49 @@ const LoginPage = () => {
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
   });
+
+  const router = useRouter();
   
   const { toast } = useToast();
 
-  const onSubmit = (data: LoginFormValues) => {
-    console.log("Datos de inicio de sesión:", data);
+  const onSubmit = async (data: LoginFormValues) => {
+ 
+    // Loguear al usuario
+    const response = await signIn("credentials", {
+      email: data.email,
+      password: data.password,
+      redirect: false,
+    });
+
+    // Validar si es undefined
+    if (!response) {
+      toast({
+        title: "Error al iniciar sesión",
+        description: "Ocurrió un error al iniciar sesión.",
+        variant: "warning",
+      });
+      return;
+    }
+
+    // Validar si hubo error
+    if (response?.error) {
+      toast({
+        title: "Error al iniciar sesión",
+        description: "Las credenciales son incorrectas.",
+        variant: "warning",
+      });
+      return;
+    }
+
+    // Si no hubo error, mostrar mensaje de éxito
     toast({
       title: "Inicio de sesión exitoso",
       description: "Has iniciado sesión correctamente.",
     });
+
+    // Redirigir al usuario a la página de inicio
+    router.push("/dashboard");
+
   };
 
   return (
