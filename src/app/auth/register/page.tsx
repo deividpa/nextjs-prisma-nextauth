@@ -1,6 +1,7 @@
 "use client"
 
 import React from "react"
+import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
@@ -36,14 +37,45 @@ const RegisterPage = () => {
   })
 
   const { toast } = useToast()
+  const router = useRouter()
 
-  const onSubmit = (data: RegisterFormValues) => {
-    // Here I would send the data to the server
-    console.log(data)
-    toast({
-      title: "Registro exitoso",
-      description: "Tu cuenta ha sido creada correctamente.",
-    })
+  const onSubmit = async (data: RegisterFormValues) => {
+    try {
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        body: JSON.stringify({
+          email: data.email,
+          username: data.username,
+          password: data.password,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const resJSON = await response.json();
+
+      if (response.ok) {
+        router.push("/auth/login");
+      }
+  
+      if (!response.ok) {
+        throw new Error(resJSON.error || "Error en el registro");
+      }
+
+      toast({
+        title: "Registro exitoso",
+        description: resJSON.message,
+        variant: "success"
+      });
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "Error",
+        description: (error instanceof Error ? error.message : "Algo salió mal"),
+        variant: "destructive"
+      });
+    }
   }
 
   return (
